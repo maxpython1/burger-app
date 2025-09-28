@@ -8,8 +8,10 @@
 	width: 272px;
 	height: 208px;
 	gap: 4px;
+	text-align: center;
 }
 
 .countWrapper {
 	display: flex;
+	gap: 8px;
 }

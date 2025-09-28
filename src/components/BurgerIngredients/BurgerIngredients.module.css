@@ -18,6 +18,7 @@
 	justify-content: center;
 	align-items: center;
 	margin-bottom: 40px;
+	gap: 32px;
 }
 
 .ingredient {
@@ -25,6 +26,7 @@
 }
 
 .scrollArea {
-	max-height: calc(100vh - 290px);
+	max-height: calc(100vh - 285px);
 	overflow: auto;
+	padding-right: 60px;
 }

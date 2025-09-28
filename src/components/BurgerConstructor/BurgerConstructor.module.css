@@ -2,16 +2,25 @@
 	display: flex;
 	flex-direction: column;
 	margin-top: 100px;
+	margin-left: 15px;
+	gap: 16px;
+}
+
+.bun {
+	margin-left: 27px;
 }
 
 .ingredients {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
-	max-height: calc(100vh - 290px);
+	max-height: calc(100vh - 555px);
+	gap: 16px;
 	overflow: auto;
-	margin-bottom: 40px;
-	padding: 0 16px;
+}
+
+.cardIngredient {
+	display: flex;
+	gap: 13px;
 }
 
 .totalPrice {
@@ -19,6 +28,8 @@
 	justify-content: flex-end;
 	align-items: center;
 	gap: 40px;
+	margin-top: 40px;
+	margin-right: 16px;
 }
 
 .price {
