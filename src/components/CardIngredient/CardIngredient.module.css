@@ -1,0 +1,17 @@
+.cardWrapper {
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	width: 272px;
+	height: 208px;
+	gap: 4px;
+	text-align: center;
+}
+
+.countWrapper {
+	display: flex;
+	gap: 8px;
+}

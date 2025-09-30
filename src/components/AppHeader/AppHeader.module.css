@@ -1,0 +1,39 @@
+.header {
+	box-sizing: border-box;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	padding: 0 16px;
+	background: #1C1C21;
+	height: 88px;
+}
+
+.leftMenu {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+}
+
+.rightMenu {
+	composes: leftMenu;
+	justify-content: flex-end;
+}
+
+.navItem {
+	display: flex;
+	padding: 16px 20px;
+	justify-content: center;
+	align-items: center;
+	gap: 8px;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.textLight {
+	color: #F2F2F3;
+}
+
+.textDark {
+	color: #8585AD;
+}

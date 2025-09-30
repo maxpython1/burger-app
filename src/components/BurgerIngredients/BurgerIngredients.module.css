@@ -1,0 +1,32 @@
+.wrapper {
+	width: 600px;
+}
+
+.title {
+	margin-top: 40px;
+	margin-bottom: 20px;
+}
+
+.tab {
+	display: flex;
+	margin-bottom: 40px;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 40px;
+	gap: 32px;
+}
+
+.ingredient {
+	margin-bottom: 24px;
+}
+
+.scrollArea {
+	max-height: calc(100vh - 285px);
+	overflow: auto;
+	padding-right: 60px;
+}
