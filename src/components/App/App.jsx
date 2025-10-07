@@ -4,18 +4,16 @@ import AppHeader from "../AppHeader/AppHeader";
 import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
 
-class App extends React.Component {
-	render() {
-		return (
-			<div className={styles.appWrapper}>
-				<AppHeader/>
-				<main className={styles.main}>
-					<BurgerIngredients/>
-					<BurgerConstructor/>
-				</main>
-			</div>
-		);
-	}
+function App() {
+	return (
+		<div className={styles.appWrapper}>
+			<AppHeader/>
+			<main className={styles.main}>
+				<BurgerIngredients/>
+				<BurgerConstructor/>
+			</main>
+		</div>
+	);
 }
 
 export default App;
