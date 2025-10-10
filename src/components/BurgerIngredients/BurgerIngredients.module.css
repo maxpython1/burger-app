@@ -21,8 +21,12 @@
 	gap: 32px;
 }
 
-.ingredient {
+.ingredientTitle {
 	margin-bottom: 24px;
+}
+
+.ingredients {
+	cursor: pointer;
 }
 
 .scrollArea {

@@ -1,11 +1,13 @@
 import React from "react";
-import styles from "./BurgerConstructor.module.css"
+import PropTypes from "prop-types";
+import styles from "./BurgerConstructor.module.css";
 import {ConstructorElement, CurrencyIcon, Button} from "@ya.praktikum/react-developer-burger-ui-components";
-import data from "../../utils/data.json"
-import icon from "../../images/vector.svg"
+import icon from "../../images/vector.svg";
 
-function BurgerConstructor() {
-	let bun = data.find((elem) => elem.type === "bun");
+function BurgerConstructor({data, openModal}) {
+	let bun = React.useMemo( () => data.find((elem) => elem.type === "bun"), [data]);
+	let ingredients = React.useMemo(() => data.filter((arr) => arr.type !== "bun"), [data]);
+	
 	return (
 		<div className={styles.wrapper}>
 			<div className={styles.bun}>
@@ -13,7 +15,7 @@ function BurgerConstructor() {
 				                            price={bun.price}/>}
 			</div>
 			<ul className={styles.ingredients}>
-				{data.filter((arr) => arr.type !== "bun").map((elem, id) => {
+				{ingredients.map((elem, id) => {
 					return (
 						<li key={id} className={styles.cardIngredient}>
 							<img src={icon} alt={"Иконка перетаскивания"}/>
@@ -33,12 +35,32 @@ function BurgerConstructor() {
 					<p className="text text_type_digits-medium">610</p>
 					<CurrencyIcon type={"primary"}/>
 				</div>
-				<Button htmlType="button" type="primary" size="large">
+				<Button htmlType="button" type="primary" size="large" onClick={openModal}>
 					Оформить заказ
 				</Button>
 			</div>
 		</div>
 	);
 }
+
+BurgerConstructor.propTypes = {
+	data: PropTypes.arrayOf(
+		PropTypes.shape({
+			_id: PropTypes.string,
+			name: PropTypes.string,
+			type: PropTypes.string,
+			proteins: PropTypes.number,
+			fat: PropTypes.number,
+			carbohydrates: PropTypes.number,
+			calories: PropTypes.number,
+			price: PropTypes.number,
+			image: PropTypes.string,
+			image_mobile: PropTypes.string,
+			image_large: PropTypes.string,
+			__v: PropTypes.number
+		})
+	),
+	openModal: PropTypes.func
+};
 
 export default BurgerConstructor;

@@ -8,6 +8,7 @@
 
 .bun {
 	margin-left: 27px;
+	padding: 0 15px;
 }
 
 .ingredients {
@@ -16,6 +17,7 @@
 	max-height: calc(100vh - 555px);
 	gap: 16px;
 	overflow: auto;
+	padding: 0 15px;
 }
 
 .cardIngredient {
