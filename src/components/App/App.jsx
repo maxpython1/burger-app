@@ -3,7 +3,6 @@ import styles from "./App.module.css";
 import AppHeader from "../AppHeader/AppHeader";
 import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
-import ModalOverlay from "../ModalOverlay/ModalOverlay";
 import Modal from "../Modal/Modal";
 import IngredientDetails from "../IngredientDetails/IngredientDetails";
 import OrderDetails from "../OrderDetails/OrderDetails";
@@ -16,15 +15,14 @@ function App() {
 	const [selectedIngredient, setSelectedIngredient] = React.useState();
 	
 	React.useEffect(() => {
-		(async () => {
-			try {
-				const request = await fetch(URL);
-				const response = await request.json();
-				setData(response.data);
-			} catch (e) {
-				console.log(e);
+		const request = fetch(URL).then((response) => {
+			if (response.ok) {
+				return response.json()
+			} else {
+				return Promise.reject(`Ошибка ${response.status}`)
 			}
-		})()
+		}).then((result) => setData(result.data))
+			.catch((error) => console.error(`Ошибка запроса ${error}`))
 	}, [])
 	
 	function openModalIngredient(ingredient) {
@@ -38,6 +36,8 @@ function App() {
 		setModal(true);
 	}
 	
+	const onCloseModal = () => setModal(false);
+	
 	return (
 		<div className={styles.appWrapper}>
 			<AppHeader/>
@@ -45,16 +45,14 @@ function App() {
 				<BurgerIngredients data={data} openModal={openModalIngredient}/>
 				<BurgerConstructor data={data} openModal={openModalOrder}/>
 				{modal && typeModal === "ingredient" && (<>
-					<Modal title={"Детали ингредиента"} closeModal={() => setModal(false)}>
+					<Modal title={"Детали ингредиента"} onCloseModal={onCloseModal}>
 						<IngredientDetails data={selectedIngredient}/>
 					</Modal>
-					<ModalOverlay closeOverlay={() => setModal(false)}/>
 				</>)}
 				{modal && typeModal === "order" && (<>
-					<Modal closeModal={() => setModal(false)}>
+					<Modal onCloseModal={onCloseModal}>
 						<OrderDetails/>
 					</Modal>
-					<ModalOverlay closeOverlay={() => setModal(false)}/>
 				</>)}
 			</main>
 		</div>

@@ -3,24 +3,17 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import styles from "./ModalOverlay.module.css";
 
-function ModalOverlay({closeOverlay}) {
-	React.useEffect(() => {
-		let onEsc = (e) => e.key === "Escape" && closeOverlay();
-		document.addEventListener("keydown", onEsc);
-		return () => (
-			document.removeEventListener("keydown", onEsc)
-		);
-	}, [closeOverlay])
-	
+function ModalOverlay({children, onCloseModal}) {
 	const modal = document.getElementById("react-modals");
 	
 	return ReactDOM.createPortal(
-		(<div className={styles.modalOverlay} onClick={closeOverlay}>
+		(<div className={styles.modalOverlay} onClick={onCloseModal}>
+			{children}
 		</div>), modal);
 }
 
 ModalOverlay.propTypes = {
-	closeOverlay: PropTypes.func
+	onCloseModal: PropTypes.func.isRequired
 };
 
 export default ModalOverlay;
