@@ -11,9 +11,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
 import {
   addItem,
+  moveItem,
   removeItem,
   setBun
 } from "../../services/actions/burgerConstructor";
+import DraggableIngredient from "./DraggableIngredient";
+import { createOrder } from "../../services/actions/order";
 
 function BurgerConstructor({ openModal }) {
   const dispatch = useDispatch();
@@ -45,12 +48,21 @@ function BurgerConstructor({ openModal }) {
     []
   );
 
+  const moveIngredient = (from, to) => {
+    dispatch(moveItem(from, to));
+  };
+
   const orderPrice = () => {
     let price = 0;
     price += ingredients.reduce((acc, el) => acc + el.price, 0);
     price += bun ? bun.price * 2 : 0;
     return price;
   };
+
+  const orderIds = React.useMemo(() => {
+    if (!bun) return null;
+    return [bun._id, ...ingredients.map((el) => el._id), bun._id];
+  }, [bun, ingredients]);
 
   return (
     <div className={styles.wrapper} ref={dropBunRef}>
@@ -65,20 +77,16 @@ function BurgerConstructor({ openModal }) {
           />
         )}
       </div>
-      <ul className={styles.ingredients} ref={bun && dropIngredientRef}>
-        {ingredients.map((elem, id) => {
-          return (
-            <li key={id} className={styles.cardIngredient}>
-              <img src={icon} alt={"Иконка перетаскивания"} />
-              <ConstructorElement
-                text={elem.name}
-                thumbnail={elem.image}
-                price={elem.price}
-                handleClose={() => dispatch(removeItem(elem.uuid))}
-              />
-            </li>
-          );
-        })}
+      <ul className={styles.ingredients} ref={bun ? dropIngredientRef : null}>
+        {ingredients.map((elem, id) => (
+          <DraggableIngredient
+            key={elem.uuid}
+            elem={elem}
+            index={id}
+            move={moveIngredient}
+            onRemove={(uuid) => dispatch(removeItem(uuid))}
+          />
+        ))}
       </ul>
       <div className={styles.bun} ref={dropBunRef}>
         {bun && (
@@ -101,8 +109,11 @@ function BurgerConstructor({ openModal }) {
           type="primary"
           size="large"
           onClick={() => {
-            // openModal();
-            ingredients.forEach((el) => console.log(el.uuid));
+            if (!bun) {
+              return;
+            }
+            dispatch(createOrder(orderIds));
+            openModal();
           }}
         >
           Оформить заказ

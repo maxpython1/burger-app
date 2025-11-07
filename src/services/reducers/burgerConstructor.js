@@ -1,7 +1,8 @@
 import {
   CONSTRUCTOR_SET_BUN,
   CONSTRUCTOR_ADD_INGREDIENT,
-  CONSTRUCTOR_REMOVE_INGREDIENT
+  CONSTRUCTOR_REMOVE_INGREDIENT,
+  CONSTRUCTOR_MOVE_INGREDIENT
 } from "../actions/burgerConstructor";
 
 const initialState = {
@@ -22,6 +23,14 @@ export function burgerConstructor(state = initialState, action) {
         ...state,
         ingredients: [...state.ingredients, action.payload]
       };
+    }
+    case CONSTRUCTOR_MOVE_INGREDIENT: {
+      const { fromIndex, toIndex } = action.payload;
+      if (fromIndex === toIndex) return state;
+      const next = [...state.ingredients];
+      const [moved] = next.splice(fromIndex, 1);
+      next.splice(toIndex, 0, moved);
+      return { ...state, ingredients: next };
     }
     case CONSTRUCTOR_REMOVE_INGREDIENT: {
       return {

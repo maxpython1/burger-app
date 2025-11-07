@@ -1,6 +1,7 @@
 export const CONSTRUCTOR_SET_BUN = "CONSTRUCTOR_SET_BUN";
 export const CONSTRUCTOR_ADD_INGREDIENT = "CONSTRUCTOR_ADD_INGREDIENT";
 export const CONSTRUCTOR_REMOVE_INGREDIENT = "CONSTRUCTOR_REMOVE_INGREDIENT";
+export const CONSTRUCTOR_MOVE_INGREDIENT = "CONSTRUCTOR_MOVE_INGREDIENT";
 
 export const setBun = (bun) => {
   return {
@@ -16,6 +17,13 @@ export const addItem = (item) => {
       ...item,
       uuid: crypto.randomUUID?.() || String(Date.now() + Math.random())
     }
+  };
+};
+
+export const moveItem = (fromIndex, toIndex) => {
+  return {
+    type: CONSTRUCTOR_MOVE_INGREDIENT,
+    payload: { fromIndex, toIndex }
   };
 };
 
