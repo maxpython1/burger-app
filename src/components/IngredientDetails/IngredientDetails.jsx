@@ -7,7 +7,7 @@ function IngredientDetails() {
 
   return (
     <div className={styles.wrapper}>
-      <img src={data.image_large} alt={"Картинка ингредиента"} />
+      <img src={data.image_large} alt={data?.name || "Ингредиент"} />
       <p className={`text text_type_main-medium ${styles.name}`}>{data.name}</p>
       <ul className={styles.nutrients}>
         <li className={styles.nutrient}>

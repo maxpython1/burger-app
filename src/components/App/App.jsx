@@ -46,18 +46,14 @@ function App() {
         <BurgerIngredients openModal={openModalIngredient} />
         <BurgerConstructor openModal={openModalOrder} />
         {modal && typeModal === "ingredient" && (
-          <>
-            <Modal title={"Детали ингредиента"} onCloseModal={onCloseModal}>
-              <IngredientDetails />
-            </Modal>
-          </>
+          <Modal title={"Детали ингредиента"} onCloseModal={onCloseModal}>
+            <IngredientDetails />
+          </Modal>
         )}
         {modal && typeModal === "order" && (
-          <>
-            <Modal onCloseModal={onCloseModal}>
-              <OrderDetails />
-            </Modal>
-          </>
+          <Modal onCloseModal={onCloseModal}>
+            <OrderDetails />
+          </Modal>
         )}
       </main>
     </div>

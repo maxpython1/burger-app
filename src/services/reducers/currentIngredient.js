@@ -11,7 +11,7 @@ export function currentIngredient(state = initialState, action) {
       return action.payload;
     }
     case CURRENT_INGREDIENT_CLEAR: {
-      return null;
+      return initialState;
     }
     default: {
       return state;

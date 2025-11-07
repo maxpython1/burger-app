@@ -2,7 +2,8 @@ import {
   CONSTRUCTOR_SET_BUN,
   CONSTRUCTOR_ADD_INGREDIENT,
   CONSTRUCTOR_REMOVE_INGREDIENT,
-  CONSTRUCTOR_MOVE_INGREDIENT
+  CONSTRUCTOR_MOVE_INGREDIENT,
+  CONSTRUCTOR_CLEAR
 } from "../actions/burgerConstructor";
 
 const initialState = {
@@ -37,6 +38,9 @@ export function burgerConstructor(state = initialState, action) {
         ...state,
         ingredients: state.ingredients.filter((el) => el.uuid != action.payload)
       };
+    }
+    case CONSTRUCTOR_CLEAR: {
+      return initialState;
     }
     default: {
       return state;
