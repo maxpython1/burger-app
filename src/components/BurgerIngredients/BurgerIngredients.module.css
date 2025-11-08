@@ -1,36 +1,37 @@
 .wrapper {
-	width: 600px;
+  width: 600px;
 }
 
 .title {
-	margin-top: 40px;
-	margin-bottom: 20px;
+  margin-top: 40px;
+  margin-bottom: 20px;
 }
 
 .tab {
-	display: flex;
-	margin-bottom: 40px;
+  display: flex;
+  margin-bottom: 40px;
 }
 
 .grid {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	justify-content: center;
-	align-items: center;
-	margin-bottom: 40px;
-	gap: 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+  gap: 32px;
 }
 
 .ingredientTitle {
-	margin-bottom: 24px;
+  margin-bottom: 24px;
 }
 
 .ingredients {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .scrollArea {
-	max-height: calc(100vh - 285px);
-	overflow: auto;
-	padding-right: 60px;
+  position: relative;
+  max-height: calc(100vh - 285px);
+  overflow: auto;
+  padding-right: 60px;
 }
