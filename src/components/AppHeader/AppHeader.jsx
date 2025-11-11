@@ -6,15 +6,24 @@ import {
   Logo,
   ProfileIcon
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { NavLink } from "react-router-dom";
 
 function AppHeader() {
   return (
     <header className={styles.header}>
       <nav className={styles.leftMenu}>
-        <a className={styles.navItem} href={"#"}>
+        <NavLink
+          to={"/"}
+          end
+          className={({ isActive }) =>
+            isActive
+              ? `text text_type_main-default ${styles.navItem}`
+              : `text text_type_main-default text_color_inactive ${styles.navItem}`
+          }
+        >
           <BurgerIcon type={"primary"} />
-          <p className="text text_type_main-default">Конструктор</p>
-        </a>
+          <p>Конструктор</p>
+        </NavLink>
         <a className={styles.navItem} href={"#"}>
           <ListIcon type={"secondary"} />
           <p className="text text_type_main-default text_color_inactive">
@@ -24,12 +33,18 @@ function AppHeader() {
       </nav>
       <Logo />
       <nav className={styles.rightMenu}>
-        <a className={styles.navItem} href={"#"}>
+        <NavLink
+          to={"/profile"}
+          end
+          className={({ isActive }) =>
+            isActive
+              ? `text text_type_main-default ${styles.navItem}`
+              : `text text_type_main-default text_color_inactive ${styles.navItem}`
+          }
+        >
           <ProfileIcon type={"secondary"} />
-          <p className="text text_type_main-default text_color_inactive">
-            Личный кабинет
-          </p>
-        </a>
+          <p>Личный кабинет</p>
+        </NavLink>
       </nav>
     </header>
   );

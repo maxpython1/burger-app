@@ -1,0 +1,26 @@
+.page {
+  display: flex;
+  margin-top: 15vh;
+}
+
+.wrapper {
+  display: flex;
+  align-items: start;
+  gap: 180px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.info {
+  margin-top: 80px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}

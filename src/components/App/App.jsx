@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
 import styles from "./App.module.css";
 import AppHeader from "../AppHeader/AppHeader";
 import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
@@ -12,6 +13,11 @@ import {
   clearIngredient,
   setIngredient
 } from "../../services/actions/currentIngredient";
+import Login from "../../pages/Login/Login";
+import Registration from "../../pages/Registration/Registration";
+import ForgotPassword from "../../pages/ForgotPassword/ForgotPassword";
+import ResetPassword from "../../pages/ResetPassword/ResetPassword";
+import Profile from "../../pages/Profile/Profile";
 
 function App() {
   const dispatch = useDispatch();
@@ -43,8 +49,22 @@ function App() {
     <div className={styles.appWrapper}>
       <AppHeader />
       <main className={styles.main}>
-        <BurgerIngredients openModal={openModalIngredient} />
-        <BurgerConstructor openModal={openModalOrder} />
+        <Routes>
+          <Route
+            path={"/"}
+            element={
+              <>
+                <BurgerIngredients openModal={openModalIngredient} />
+                <BurgerConstructor openModal={openModalOrder} />
+              </>
+            }
+          />
+          <Route path={"/profile"} element={<Profile />} />
+          <Route path={"/login"} element={<Login />} />
+          <Route path={"/register"} element={<Registration />} />
+          <Route path={"/forgot-password"} element={<ForgotPassword />} />
+          <Route path={"/reset-password"} element={<ResetPassword />} />
+        </Routes>
         {modal && typeModal === "ingredient" && (
           <Modal title={"Детали ингредиента"} onCloseModal={onCloseModal}>
             <IngredientDetails />
