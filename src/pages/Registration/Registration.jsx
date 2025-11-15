@@ -6,9 +6,12 @@ import {
   PasswordInput
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link } from "react-router-dom";
-import { request } from "../../utils/api";
+import { useDispatch } from "react-redux";
+import { register } from "../../services/actions/auth";
 
 function Registration() {
+  const dispatch = useDispatch();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,11 +22,7 @@ function Registration() {
         className={styles.loginWrapper}
         onSubmit={(e) => {
           e.preventDefault();
-          request("auth/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, email, password })
-          }).then((data) => console.log(data));
+          dispatch(register(name, email, password));
         }}
       >
         <p className="text text_type_main-medium">Регистрация</p>

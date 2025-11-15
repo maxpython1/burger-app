@@ -18,9 +18,19 @@ import Registration from "../../pages/Registration/Registration";
 import ForgotPassword from "../../pages/ForgotPassword/ForgotPassword";
 import ResetPassword from "../../pages/ResetPassword/ResetPassword";
 import Profile from "../../pages/Profile/Profile";
+import { getCookie } from "../../utils/cookies";
+import { getUser } from "../../services/actions/auth";
+import { ProtectedRouteElement } from "./ProtectedRouteElement/ProtectedRouteElement";
 
 function App() {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const token = getCookie("token");
+    if (token) {
+      dispatch(getUser());
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(fetchIngredients());
@@ -59,11 +69,46 @@ function App() {
               </>
             }
           />
-          <Route path={"/profile"} element={<Profile />} />
-          <Route path={"/login"} element={<Login />} />
-          <Route path={"/register"} element={<Registration />} />
-          <Route path={"/forgot-password"} element={<ForgotPassword />} />
-          <Route path={"/reset-password"} element={<ResetPassword />} />
+          <Route
+            path={"/profile"}
+            element={
+              <ProtectedRouteElement forAuthorized={true}>
+                <Profile />
+              </ProtectedRouteElement>
+            }
+          />
+          <Route
+            path={"/login"}
+            element={
+              <ProtectedRouteElement forAuthorized={false}>
+                <Login />
+              </ProtectedRouteElement>
+            }
+          />
+          <Route
+            path={"/register"}
+            element={
+              <ProtectedRouteElement>
+                <Registration forAuthorized={false} />
+              </ProtectedRouteElement>
+            }
+          />
+          <Route
+            path={"/forgot-password"}
+            element={
+              <ProtectedRouteElement>
+                <ForgotPassword forAuthorized={false} />
+              </ProtectedRouteElement>
+            }
+          />
+          <Route
+            path={"/reset-password"}
+            element={
+              <ProtectedRouteElement>
+                <ResetPassword forAuthorized={false} />
+              </ProtectedRouteElement>
+            }
+          />
         </Routes>
         {modal && typeModal === "ingredient" && (
           <Modal title={"Детали ингредиента"} onCloseModal={onCloseModal}>

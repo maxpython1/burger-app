@@ -17,6 +17,7 @@ import {
 } from "../../services/actions/burgerConstructor";
 import DraggableIngredient from "./DraggableIngredient";
 import { createOrder } from "../../services/actions/order";
+import { getCookie } from "../../utils/cookies";
 
 function BurgerConstructor({ openModal }) {
   const dispatch = useDispatch();
@@ -109,7 +110,7 @@ function BurgerConstructor({ openModal }) {
           type="primary"
           size="large"
           onClick={() => {
-            if (!bun) {
+            if (!bun || !getCookie("token")) {
               return;
             }
             dispatch(createOrder(orderIds));
