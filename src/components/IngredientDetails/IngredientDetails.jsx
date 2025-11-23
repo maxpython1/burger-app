@@ -1,21 +1,33 @@
-import React from "react";
-import styles from "./IngredientDetails.module.css";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import styles from "./IngredientDetails.module.css";
 
 function IngredientDetails() {
-  const data = useSelector((state) => state.currentIngredient);
+  const { id } = useParams();
+  const ingredients = useSelector((state) => state.ingredients.ingredients);
+
+  const ingredient = ingredients.find((elem) => elem._id === id);
+
+  if (!ingredient) {
+    return null;
+  }
 
   return (
     <div className={styles.wrapper}>
-      <img src={data.image_large} alt={data?.name || "Ингредиент"} />
-      <p className={`text text_type_main-medium ${styles.name}`}>{data.name}</p>
+      <img
+        src={ingredient.image_large}
+        alt={ingredient?.name || "Ингредиент"}
+      />
+      <p className={`text text_type_main-medium ${styles.name}`}>
+        {ingredient.name}
+      </p>
       <ul className={styles.nutrients}>
         <li className={styles.nutrient}>
           <span className="text text_type_main-default text_color_inactive">
             Калории, ккал
           </span>
           <span className="text text_type_main-default text_color_inactive">
-            {data.calories}
+            {ingredient.calories}
           </span>
         </li>
         <li className={styles.nutrient}>
@@ -23,7 +35,7 @@ function IngredientDetails() {
             Белки, г
           </span>
           <span className="text text_type_main-default text_color_inactive">
-            {data.proteins}
+            {ingredient.proteins}
           </span>
         </li>
         <li className={styles.nutrient}>
@@ -31,7 +43,7 @@ function IngredientDetails() {
             Жиры, г
           </span>
           <span className="text text_type_main-default text_color_inactive">
-            {data.fat}
+            {ingredient.fat}
           </span>
         </li>
         <li className={styles.nutrient}>
@@ -39,7 +51,7 @@ function IngredientDetails() {
             Углеводы, г
           </span>
           <span className="text text_type_main-default text_color_inactive">
-            {data.carbohydrates}
+            {ingredient.carbohydrates}
           </span>
         </li>
       </ul>

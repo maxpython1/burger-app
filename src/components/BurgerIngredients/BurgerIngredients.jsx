@@ -1,13 +1,16 @@
-import React from "react";
-import PropTypes from "prop-types";
-import styles from "./BurgerIngredients.module.css";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
-import CardIngredient from "../CardIngredient/CardIngredient";
+import PropTypes from "prop-types";
+import React from "react";
 import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import CardIngredient from "../CardIngredient/CardIngredient";
+import styles from "./BurgerIngredients.module.css";
 
-function BurgerIngredients({ openModal }) {
+function BurgerIngredients() {
   const [current, setCurrent] = React.useState("bun");
   const ingredients = useSelector((store) => store.ingredients.ingredients);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const containerRef = React.useRef(null);
   const bunsRef = React.useRef(null);
@@ -45,8 +48,6 @@ function BurgerIngredients({ openModal }) {
     const container = containerRef.current;
     container.scrollTo({ top: ref.current.offsetTop, behavior: "smooth" });
   };
-
-  const count = () => {};
 
   return (
     <div className={styles.wrapper}>
@@ -101,7 +102,11 @@ function BurgerIngredients({ openModal }) {
             return (
               <li
                 key={elem._id}
-                onClick={() => openModal(elem)}
+                onClick={() => {
+                  navigate(`/ingredients/${elem._id}`, {
+                    state: { background: location }
+                  });
+                }}
                 className={styles.ingredients}
               >
                 <CardIngredient ingredient={elem} />
@@ -120,7 +125,11 @@ function BurgerIngredients({ openModal }) {
             return (
               <li
                 key={elem._id}
-                onClick={() => openModal(elem)}
+                onClick={() => {
+                  navigate(`/ingredients/${elem._id}`, {
+                    state: { background: location }
+                  });
+                }}
                 className={styles.ingredients}
               >
                 <CardIngredient ingredient={elem} />
@@ -139,7 +148,11 @@ function BurgerIngredients({ openModal }) {
             return (
               <li
                 key={elem._id}
-                onClick={() => openModal(elem)}
+                onClick={() => {
+                  navigate(`/ingredients/${elem._id}`, {
+                    state: { background: location }
+                  });
+                }}
                 className={styles.ingredients}
               >
                 <CardIngredient ingredient={elem} />

@@ -1,57 +1,127 @@
 import React, { useEffect } from "react";
-import styles from "./App.module.css";
-import AppHeader from "../AppHeader/AppHeader";
-import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
-import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
-import Modal from "../Modal/Modal";
-import IngredientDetails from "../IngredientDetails/IngredientDetails";
-import OrderDetails from "../OrderDetails/OrderDetails";
 import { useDispatch } from "react-redux";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import ForgotPassword from "../../pages/ForgotPassword/ForgotPassword";
+import Login from "../../pages/Login/Login";
+import Profile from "../../pages/Profile/Profile";
+import Registration from "../../pages/Registration/Registration";
+import ResetPassword from "../../pages/ResetPassword/ResetPassword";
+import { getUser } from "../../services/actions/auth";
 import { fetchIngredients } from "../../services/actions/ingredients";
-import {
-  clearIngredient,
-  setIngredient
-} from "../../services/actions/currentIngredient";
+import { getCookie } from "../../utils/cookies";
+import AppHeader from "../AppHeader/AppHeader";
+import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
+import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
+import IngredientDetails from "../IngredientDetails/IngredientDetails";
+import Modal from "../Modal/Modal";
+import OrderDetails from "../OrderDetails/OrderDetails";
+import styles from "./App.module.css";
+import { ProtectedRouteElement } from "./ProtectedRouteElement/ProtectedRouteElement";
 
 function App() {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const background = location.state?.background;
+
+  useEffect(() => {
+    const token = getCookie("token");
+    if (token) {
+      dispatch(getUser());
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(fetchIngredients());
   }, [dispatch]);
 
-  const [modal, setModal] = React.useState(false);
-  const [typeModal, setTypeModal] = React.useState();
+  const [isModalOrderOpen, setIsModalOrderOpen] = React.useState(false);
 
-  function openModalIngredient(ingredient) {
-    dispatch(setIngredient(ingredient));
-    setTypeModal("ingredient");
-    setModal(true);
+  function openOrderModal() {
+    setIsModalOrderOpen(true);
   }
 
-  function openModalOrder() {
-    setTypeModal("order");
-    setModal(true);
+  function closeOrderModal() {
+    setIsModalOrderOpen(false);
   }
 
-  function onCloseModal() {
-    dispatch(clearIngredient());
-    setModal(false);
+  function closeIngredientModal() {
+    navigate(-1);
   }
 
   return (
     <div className={styles.appWrapper}>
       <AppHeader />
       <main className={styles.main}>
-        <BurgerIngredients openModal={openModalIngredient} />
-        <BurgerConstructor openModal={openModalOrder} />
-        {modal && typeModal === "ingredient" && (
-          <Modal title={"Детали ингредиента"} onCloseModal={onCloseModal}>
-            <IngredientDetails />
-          </Modal>
+        <Routes location={background || location}>
+          <Route
+            path={"/"}
+            element={
+              <>
+                <BurgerIngredients />
+                <BurgerConstructor openModal={openOrderModal} />
+              </>
+            }
+          />
+          <Route
+            path={"/profile"}
+            element={
+              <ProtectedRouteElement forAuthorized={true}>
+                <Profile />
+              </ProtectedRouteElement>
+            }
+          />
+          <Route
+            path={"/login"}
+            element={
+              <ProtectedRouteElement forAuthorized={false}>
+                <Login />
+              </ProtectedRouteElement>
+            }
+          />
+          <Route
+            path={"/register"}
+            element={
+              <ProtectedRouteElement forAuthorized={false}>
+                <Registration />
+              </ProtectedRouteElement>
+            }
+          />
+          <Route
+            path={"/forgot-password"}
+            element={
+              <ProtectedRouteElement forAuthorized={false}>
+                <ForgotPassword />
+              </ProtectedRouteElement>
+            }
+          />
+          <Route
+            path={"/reset-password"}
+            element={
+              <ProtectedRouteElement forAuthorized={false}>
+                <ResetPassword />
+              </ProtectedRouteElement>
+            }
+          />
+          <Route path={"/ingredients/:id"} element={<IngredientDetails />} />
+        </Routes>
+        {background && (
+          <Routes>
+            <Route
+              path="/ingredients/:id"
+              element={
+                <Modal
+                  onCloseModal={closeIngredientModal}
+                  title={"Детали ингредиента"}
+                >
+                  <IngredientDetails />
+                </Modal>
+              }
+            />
+          </Routes>
         )}
-        {modal && typeModal === "order" && (
-          <Modal onCloseModal={onCloseModal}>
+        {isModalOrderOpen && (
+          <Modal onCloseModal={closeOrderModal}>
             <OrderDetails />
           </Modal>
         )}
