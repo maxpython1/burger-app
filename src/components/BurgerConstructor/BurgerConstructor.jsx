@@ -1,26 +1,27 @@
-import React from "react";
-import PropTypes from "prop-types";
-import styles from "./BurgerConstructor.module.css";
 import {
+  Button,
   ConstructorElement,
-  CurrencyIcon,
-  Button
+  CurrencyIcon
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import icon from "../../images/vector.svg";
+import PropTypes from "prop-types";
+import React from "react";
+import { useDrop } from "react-dnd";
 import { useDispatch, useSelector } from "react-redux";
-import { useDrag, useDrop } from "react-dnd";
+import { useNavigate } from "react-router-dom";
 import {
   addItem,
   moveItem,
   removeItem,
   setBun
 } from "../../services/actions/burgerConstructor";
-import DraggableIngredient from "./DraggableIngredient";
 import { createOrder } from "../../services/actions/order";
-import { getCookie } from "../../utils/cookies";
+import styles from "./BurgerConstructor.module.css";
+import DraggableIngredient from "./DraggableIngredient";
 
 function BurgerConstructor({ openModal }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
 
   const bun = useSelector((store) => store.burgerConstructor.bun);
 
@@ -110,7 +111,10 @@ function BurgerConstructor({ openModal }) {
           type="primary"
           size="large"
           onClick={() => {
-            if (!bun || !getCookie("token")) {
+            if (!user) {
+              return navigate("/login");
+            }
+            if (!bun) {
               return;
             }
             dispatch(createOrder(orderIds));

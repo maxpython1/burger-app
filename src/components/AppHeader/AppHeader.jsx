@@ -1,5 +1,3 @@
-import React from "react";
-import styles from "./AppHeader.module.css";
 import {
   BurgerIcon,
   ListIcon,
@@ -7,6 +5,7 @@ import {
   ProfileIcon
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { NavLink } from "react-router-dom";
+import styles from "./AppHeader.module.css";
 
 function AppHeader() {
   return (
@@ -14,7 +13,6 @@ function AppHeader() {
       <nav className={styles.leftMenu}>
         <NavLink
           to={"/"}
-          end
           className={({ isActive }) =>
             isActive
               ? `text text_type_main-default ${styles.navItem}`
@@ -35,7 +33,6 @@ function AppHeader() {
       <nav className={styles.rightMenu}>
         <NavLink
           to={"/profile"}
-          end
           className={({ isActive }) =>
             isActive
               ? `text text_type_main-default ${styles.navItem}`

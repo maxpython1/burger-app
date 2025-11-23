@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
-import styles from "./Profile.module.css";
 import {
   Button,
   Input,
   PasswordInput
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { NavLink } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
 import { logout, updateUser } from "../../services/actions/auth";
+import styles from "./Profile.module.css";
 
 function Profile() {
   const dispatch = useDispatch();
@@ -44,15 +44,14 @@ function Profile() {
           <NavLink className="text text_type_main-large text_color_inactive">
             История заказов
           </NavLink>
-          <p
-            type="button"
+          <NavLink
             onClick={() => {
               dispatch(logout());
             }}
             className="text text_type_main-large text_color_inactive"
           >
             Выход
-          </p>
+          </NavLink>
           <p
             className={`text text_type_main-default text_color_inactive ${styles.info}`}
           >

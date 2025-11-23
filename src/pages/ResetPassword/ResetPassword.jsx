@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import styles from "./ResetPassword.module.css";
 import {
   Button,
   Input,
   PasswordInput
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { request } from "../../utils/api";
+import styles from "./ResetPassword.module.css";
 
 function ResetPassword() {
   const [password, setPassword] = useState("");
@@ -14,7 +14,7 @@ function ResetPassword() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  if (location.state.from === "forgot-password") {
+  if (location?.state?.from === "forgot-password") {
     return (
       <div className={styles.page}>
         <form
@@ -64,6 +64,8 @@ function ResetPassword() {
         </div>
       </div>
     );
+  } else {
+    return <Navigate to={"/forgot-password"} replace />;
   }
 }
 

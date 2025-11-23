@@ -26,7 +26,7 @@ export const login = (email, password) => (dispatch) => {
         payload: { user, accessToken, refreshToken }
       });
     })
-    .catch((e) => dispatch({ type: AUTH_ERROR, error: e.message }));
+    .catch((e) => dispatch({ type: AUTH_ERROR, error: e }));
 };
 
 export const register = (name, email, password) => (dispatch) => {
@@ -45,7 +45,7 @@ export const register = (name, email, password) => (dispatch) => {
         payload: { user, accessToken, refreshToken }
       });
     })
-    .catch((e) => dispatch({ type: AUTH_ERROR, error: e.message }));
+    .catch((e) => dispatch({ type: AUTH_ERROR, error: e }));
 };
 
 export const logout = () => (dispatch) => {
@@ -68,9 +68,13 @@ export const logout = () => (dispatch) => {
 
 export const refreshToken = () => (dispatch) => {
   const token = localStorage.getItem("refreshToken");
+  if (!token) {
+    return Promise.reject("No refresh token");
+  }
+
   dispatch({ type: AUTH_REQUEST });
 
-  request("auth/token", {
+  return request("auth/token", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ token })
@@ -82,8 +86,12 @@ export const refreshToken = () => (dispatch) => {
         type: REFRESH_TOKEN_SUCCESS,
         payload: { accessToken, refreshToken }
       });
+      return accessToken;
     })
-    .catch((e) => dispatch({ type: AUTH_ERROR, error: e.message }));
+    .catch((e) => {
+      dispatch({ type: AUTH_ERROR, error: e });
+      return Promise.reject(e);
+    });
 };
 
 export const getUser = () => (dispatch) => {
@@ -97,7 +105,20 @@ export const getUser = () => (dispatch) => {
     }
   })
     .then(({ user }) => dispatch({ type: USER_SUCCESS, payload: { user } }))
-    .catch((e) => dispatch({ type: USER_ERROR, error: e.message }));
+    .catch((e) => {
+      if (e.status !== 401 && e.status !== 403) {
+        dispatch({ type: USER_ERROR, error: e });
+        return;
+      }
+      return dispatch(refreshToken())
+        .then(() => {
+          return dispatch(getUser());
+        })
+        .catch((e) => {
+          dispatch(logout());
+          dispatch({ type: USER_ERROR, error: e });
+        });
+    });
 };
 
 export const updateUser = (data) => (dispatch) => {
@@ -112,5 +133,5 @@ export const updateUser = (data) => (dispatch) => {
     body: JSON.stringify(data)
   })
     .then(({ user }) => dispatch({ type: USER_SUCCESS, payload: { user } }))
-    .catch((e) => dispatch({ type: USER_ERROR, error: e.message }));
+    .catch((e) => dispatch({ type: USER_ERROR, error: e }));
 };
