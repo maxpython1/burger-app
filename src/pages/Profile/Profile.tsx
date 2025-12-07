@@ -1,36 +1,54 @@
 import {
   Button,
-  Input,
-  PasswordInput
+  PasswordInput,
+  Input as UIInput
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
+import { useForm } from "../../hooks/useForm";
 import { logout, updateUser } from "../../services/actions/auth";
 import styles from "./Profile.module.css";
 
+type TUpdateUserProfile = {
+  name?: string;
+  email?: string;
+  password?: string;
+};
+
+const Input = UIInput as any;
+
 function Profile() {
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch<any>();
+  const user = useSelector((state: any) => state.auth.user);
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { values, handleChange, setValues } = useForm({
+    name: "",
+    email: "",
+    password: ""
+  });
 
-  const original = useRef({ name: "", email: "", password: "" });
+  const original = useRef<TUpdateUserProfile>({
+    name: "",
+    email: "",
+    password: ""
+  });
 
   const [nameDisabled, setNameDisabled] = useState(true);
   const [emailDisabled, setEmailDisabled] = useState(true);
   const [showFormButtons, setShowFormButton] = useState(false);
 
-  const nameRef = useRef(null);
-  const emailRef = useRef(null);
+  const nameRef = useRef<HTMLInputElement | null>(null);
+  const emailRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (user) {
-      setName(user.name);
-      setEmail(user.email);
-      original.current = { name: user.name, email: user.email };
+      setValues({
+        name: user.name,
+        email: user.email,
+        password: ""
+      });
+      original.current = { name: user.name, email: user.email, password: "" };
     }
   }, [user]);
 
@@ -41,10 +59,14 @@ function Profile() {
           <NavLink to={"/profile"} end className="text text_type_main-large">
             Профиль
           </NavLink>
-          <NavLink className="text text_type_main-large text_color_inactive">
+          <NavLink
+            to={"/profile/orders"}
+            className="text text_type_main-large text_color_inactive"
+          >
             История заказов
           </NavLink>
           <NavLink
+            to={"/"}
             onClick={() => {
               dispatch(logout());
             }}
@@ -64,18 +86,18 @@ function Profile() {
           className={styles.form}
           onSubmit={(e) => {
             e.preventDefault();
-            const data = {};
+            const data: TUpdateUserProfile = {};
 
-            if (original.current.name !== name) {
-              data.name = name;
+            if (original.current.name !== values.name) {
+              data.name = values.name;
             }
 
-            if (original.current.email !== email) {
-              data.email = email;
+            if (original.current.email !== values.email) {
+              data.email = values.email;
             }
 
-            if (password.length >= 5) {
-              data.password = password;
+            if (values.password.length >= 5) {
+              data.password = values.password;
             }
 
             console.log(data);
@@ -87,12 +109,12 @@ function Profile() {
           <Input
             type={"text"}
             placeholder={"Имя"}
-            onChange={(e) => {
-              setName(e.target.value);
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              handleChange(e);
               setShowFormButton(true);
             }}
             icon={"EditIcon"}
-            value={name}
+            value={values.name}
             name={"name"}
             error={false}
             errorText={"Ошибка"}
@@ -100,7 +122,7 @@ function Profile() {
             extraClass="ml-1"
             ref={nameRef}
             onIconClick={() => {
-              setTimeout(() => nameRef.current.focus(), 0);
+              setTimeout(() => nameRef.current?.focus(), 0);
               setNameDisabled(false);
             }}
             disabled={nameDisabled}
@@ -111,12 +133,12 @@ function Profile() {
           <Input
             type={"text"}
             placeholder={"Логин"}
-            onChange={(e) => {
-              setEmail(e.target.value);
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              handleChange(e);
               setShowFormButton(true);
             }}
             icon={"EditIcon"}
-            value={email}
+            value={values.email}
             name={"email"}
             error={false}
             errorText={"Ошибка"}
@@ -124,7 +146,7 @@ function Profile() {
             extraClass="ml-1"
             ref={emailRef}
             onIconClick={() => {
-              setTimeout(() => emailRef.current.focus(), 0);
+              setTimeout(() => emailRef.current?.focus(), 0);
               setEmailDisabled(false);
             }}
             disabled={emailDisabled}
@@ -134,10 +156,10 @@ function Profile() {
           />
           <PasswordInput
             onChange={(e) => {
-              setPassword(e.target.value);
+              handleChange(e);
               setShowFormButton(true);
             }}
-            value={password}
+            value={values.password}
             icon={"EditIcon"}
           />
           {showFormButtons && (
@@ -150,9 +172,11 @@ function Profile() {
                 type="secondary"
                 size="medium"
                 onClick={() => {
-                  setName(original.current.name);
-                  setEmail(original.current.email);
-                  setPassword("");
+                  setValues({
+                    name: original.current.name || "",
+                    email: original.current.email || "",
+                    password: ""
+                  });
                   setShowFormButton(false);
                 }}
               >

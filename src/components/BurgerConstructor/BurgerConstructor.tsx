@@ -15,19 +15,23 @@ import {
   setBun
 } from "../../services/actions/burgerConstructor";
 import { createOrder } from "../../services/actions/order";
+import { TConstructorIngredient, TIngredient } from "../../utils/types";
 import styles from "./BurgerConstructor.module.css";
 import DraggableIngredient from "./DraggableIngredient";
 
-function BurgerConstructor({ openModal }) {
-  const dispatch = useDispatch();
+type BurgerConstructorProps = {
+  openModal: () => void;
+};
+
+function BurgerConstructor({ openModal }: BurgerConstructorProps) {
+  const dispatch = useDispatch<any>();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.auth.user);
 
-  const bun = useSelector((store) => store.burgerConstructor.bun);
-
+  const user = useSelector((state: any) => state.auth.user);
+  const bun = useSelector((store: any) => store.burgerConstructor.bun);
   const ingredients = useSelector(
-    (store) => store.burgerConstructor.ingredients
-  );
+    (store: any) => store.burgerConstructor.ingredients
+  ) as TConstructorIngredient[];
 
   const [{ isHover }, dropBunRef] = useDrop(
     {
@@ -50,20 +54,23 @@ function BurgerConstructor({ openModal }) {
     []
   );
 
-  const moveIngredient = (from, to) => {
+  const moveIngredient = (from: number, to: number) => {
     dispatch(moveItem(from, to));
   };
 
   const orderPrice = () => {
     let price = 0;
-    price += ingredients.reduce((acc, el) => acc + el.price, 0);
+    price += ingredients.reduce(
+      (acc: number, el: TIngredient) => acc + el.price,
+      0
+    );
     price += bun ? bun.price * 2 : 0;
     return price;
   };
 
   const orderIds = React.useMemo(() => {
     if (!bun) return null;
-    return [bun._id, ...ingredients.map((el) => el._id), bun._id];
+    return [bun._id, ...ingredients.map((el: TIngredient) => el._id), bun._id];
   }, [bun, ingredients]);
 
   return (
@@ -86,7 +93,7 @@ function BurgerConstructor({ openModal }) {
             elem={elem}
             index={id}
             move={moveIngredient}
-            onRemove={(uuid) => dispatch(removeItem(uuid))}
+            onRemove={(uuid: string) => dispatch(removeItem(uuid))}
           />
         ))}
       </ul>

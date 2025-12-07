@@ -1,10 +1,11 @@
-import React from "react";
-import styles from "./OrderDetails.module.css";
-import icon from "../../images/done.svg";
 import { useSelector } from "react-redux";
+import icon from "../../images/done.svg";
+import styles from "./OrderDetails.module.css";
 
 function OrderDetails() {
-  const { orderNumber, isLoading, error } = useSelector((state) => state.order);
+  const { orderNumber, isLoading, error } = useSelector(
+    (state: any) => state.order
+  );
 
   return (
     <div className={styles.wrapper}>

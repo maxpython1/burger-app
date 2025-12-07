@@ -1,9 +1,18 @@
+import { ReactElement } from "react";
 import { useSelector } from "react-redux";
 import { Navigate, useLocation } from "react-router-dom";
 
-export function ProtectedRouteElement({ children, forAuthorized }) {
+type ProtectedRouteElementProps = {
+  children: ReactElement;
+  forAuthorized: boolean;
+};
+
+export function ProtectedRouteElement({
+  children,
+  forAuthorized
+}: ProtectedRouteElementProps) {
   const location = useLocation();
-  const { user, isLoading } = useSelector((state) => state.auth);
+  const { user, isLoading } = useSelector((state: any) => state.auth);
 
   if (isLoading) {
     return null;

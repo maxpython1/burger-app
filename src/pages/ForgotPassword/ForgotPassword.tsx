@@ -1,14 +1,19 @@
-import React, { useState } from "react";
-import styles from "./ForgotPassword.module.css";
 import {
   Button,
-  Input
+  Input as UIInput
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "../../hooks/useForm";
 import { request } from "../../utils/api";
+import styles from "./ForgotPassword.module.css";
+
+const Input = UIInput as any;
 
 function ForgotPassword() {
-  const [email, setEmail] = useState("");
+  const { values, handleChange } = useForm({
+    email: ""
+  });
+
   const navigate = useNavigate();
 
   return (
@@ -20,7 +25,7 @@ function ForgotPassword() {
           request("password-reset", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email })
+            body: JSON.stringify({ email: values.email })
           })
             .then(() => {
               navigate("/reset-password", {
@@ -33,8 +38,8 @@ function ForgotPassword() {
       >
         <p className="text text_type_main-medium">Восстановление пароля</p>
         <Input
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
+          onChange={handleChange}
+          value={values.email}
           type={"text"}
           placeholder={"E-mail"}
           name={"email"}
