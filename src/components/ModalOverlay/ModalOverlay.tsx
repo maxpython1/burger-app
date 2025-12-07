@@ -1,10 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
 import styles from "./ModalOverlay.module.css";
 
-function ModalOverlay({ children, onCloseModal }) {
+type ModalOverlayProps = {
+  children: React.ReactNode;
+  onCloseModal: () => void;
+};
+
+function ModalOverlay({ children, onCloseModal }: ModalOverlayProps) {
   const modal = document.getElementById("react-modals");
+
+  if (!modal) {
+    return null;
+  }
 
   return ReactDOM.createPortal(
     <div className={styles.modalOverlay} onClick={onCloseModal}>
@@ -13,9 +21,5 @@ function ModalOverlay({ children, onCloseModal }) {
     modal
   );
 }
-
-ModalOverlay.propTypes = {
-  onCloseModal: PropTypes.func.isRequired
-};
 
 export default ModalOverlay;

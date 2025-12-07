@@ -29,7 +29,9 @@ function AppHeader() {
           </p>
         </a>
       </nav>
-      <Logo />
+      <NavLink to={"/"}>
+        <Logo />
+      </NavLink>
       <nav className={styles.rightMenu}>
         <NavLink
           to={"/profile"}

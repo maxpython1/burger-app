@@ -1,19 +1,23 @@
-import React, { useEffect, useState } from "react";
-import styles from "./Login.module.css";
 import {
   Button,
-  Input,
-  PasswordInput
+  PasswordInput,
+  Input as UIInput
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import { useForm } from "../../hooks/useForm";
 import { login } from "../../services/actions/auth";
+import styles from "./Login.module.css";
+
+const Input = UIInput as any;
 
 function Login() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { values, handleChange } = useForm({
+    email: "",
+    password: ""
+  });
 
   return (
     <div className={styles.page}>
@@ -21,13 +25,13 @@ function Login() {
         className={styles.loginWrapper}
         onSubmit={(e) => {
           e.preventDefault();
-          dispatch(login(email, password));
+          dispatch(login(values.email, values.password));
         }}
       >
         <p className="text text_type_main-medium">Вход</p>
         <Input
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
+          onChange={handleChange}
+          value={values.email}
           type={"text"}
           placeholder={"E-mail"}
           name={"email"}
@@ -37,8 +41,8 @@ function Login() {
           extraClass={"ml-1"}
         />
         <PasswordInput
-          onChange={(e) => setPassword(e.target.value)}
-          value={password}
+          onChange={handleChange}
+          value={values.password}
           name={"password"}
         />
         <Button htmlType="submit" type="primary" size="large">

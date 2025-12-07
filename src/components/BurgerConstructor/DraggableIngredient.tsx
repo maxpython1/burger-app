@@ -1,11 +1,24 @@
-import { useDrag, useDrop } from "react-dnd";
 import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components";
-import icon from "../../images/vector.svg";
-import styles from "./BurgerConstructor.module.css";
 import { useRef } from "react";
+import { useDrag, useDrop } from "react-dnd";
+import icon from "../../images/vector.svg";
+import { TConstructorIngredient } from "../../utils/types";
+import styles from "./BurgerConstructor.module.css";
 
-export default function DraggableIngredient({ elem, index, move, onRemove }) {
-  const ingredientRef = useRef(null);
+type DraggableIngredientProps = {
+  elem: TConstructorIngredient;
+  index: number;
+  move: (from: number, to: number) => void;
+  onRemove: (uuid: string) => void;
+};
+
+export default function DraggableIngredient({
+  elem,
+  index,
+  move,
+  onRemove
+}: DraggableIngredientProps) {
+  const ingredientRef = useRef<HTMLLIElement | null>(null);
 
   const [{ isDrag }, dragIngredientRef] = useDrag({
     type: "constructor",
@@ -20,10 +33,14 @@ export default function DraggableIngredient({ elem, index, move, onRemove }) {
         if (!monitor.isOver({ shallow: true })) {
           return;
         }
-        const dragIndex = item.index;
+        const dragIndex = (item as { index: number }).index;
         const hoverIndex = index;
 
         const diff = monitor.getDifferenceFromInitialOffset();
+
+        if (!diff) {
+          return;
+        }
 
         const goingDown = diff.y > 1 && dragIndex < hoverIndex;
         const goingUp = diff.y < -1 && dragIndex > hoverIndex;
@@ -32,7 +49,7 @@ export default function DraggableIngredient({ elem, index, move, onRemove }) {
         }
 
         move(dragIndex, hoverIndex);
-        item.index = hoverIndex;
+        (item as { index: number }).index = hoverIndex;
       }
     },
     []

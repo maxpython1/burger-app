@@ -1,20 +1,24 @@
-import React, { useState } from "react";
-import styles from "./Registration.module.css";
 import {
   Button,
-  Input,
-  PasswordInput
+  PasswordInput,
+  Input as UIInput
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import { useForm } from "../../hooks/useForm";
 import { register } from "../../services/actions/auth";
+import styles from "./Registration.module.css";
+
+const Input = UIInput as any;
 
 function Registration() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { values, handleChange } = useForm({
+    name: "",
+    email: "",
+    password: ""
+  });
 
   return (
     <div className={styles.page}>
@@ -22,13 +26,13 @@ function Registration() {
         className={styles.loginWrapper}
         onSubmit={(e) => {
           e.preventDefault();
-          dispatch(register(name, email, password));
+          dispatch(register(values.name, values.email, values.password));
         }}
       >
         <p className="text text_type_main-medium">Регистрация</p>
         <Input
-          onChange={(e) => setName(e.target.value)}
-          value={name}
+          onChange={handleChange}
+          value={values.name}
           type={"text"}
           placeholder={"Имя"}
           name={"name"}
@@ -38,8 +42,8 @@ function Registration() {
           extraClass={"ml-1"}
         />
         <Input
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
+          onChange={handleChange}
+          value={values.email}
           type={"text"}
           placeholder={"E-mail"}
           name={"email"}
@@ -49,8 +53,8 @@ function Registration() {
           extraClass={"ml-1"}
         />
         <PasswordInput
-          onChange={(e) => setPassword(e.target.value)}
-          value={password}
+          onChange={handleChange}
+          value={values.password}
           name={"password"}
         />
         <Button htmlType="submit" type="primary" size="large">

@@ -1,4 +1,4 @@
-export function getCookie(name) {
+export function getCookie(name: string) {
   for (const entryStr of document.cookie.split("; ")) {
     const [entryName, entryValue] = entryStr.split("=");
 

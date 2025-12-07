@@ -19,7 +19,7 @@ import styles from "./App.module.css";
 import { ProtectedRouteElement } from "./ProtectedRouteElement/ProtectedRouteElement";
 
 function App() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
   const location = useLocation();
   const navigate = useNavigate();
   const background = location.state?.background;

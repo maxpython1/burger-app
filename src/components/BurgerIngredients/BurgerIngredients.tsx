@@ -1,21 +1,25 @@
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
-import PropTypes from "prop-types";
 import React from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import { TIngredient } from "../../utils/types";
 import CardIngredient from "../CardIngredient/CardIngredient";
 import styles from "./BurgerIngredients.module.css";
 
 function BurgerIngredients() {
   const [current, setCurrent] = React.useState("bun");
-  const ingredients = useSelector((store) => store.ingredients.ingredients);
+
+  const ingredients = useSelector(
+    (store: any) => store.ingredients.ingredients
+  ) as TIngredient[];
+
   const navigate = useNavigate();
   const location = useLocation();
 
-  const containerRef = React.useRef(null);
-  const bunsRef = React.useRef(null);
-  const saucesRef = React.useRef(null);
-  const mainsRef = React.useRef(null);
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
+  const bunsRef = React.useRef<HTMLDivElement | null>(null);
+  const saucesRef = React.useRef<HTMLDivElement | null>(null);
+  const mainsRef = React.useRef<HTMLDivElement | null>(null);
 
   let buns = React.useMemo(
     () => ingredients.filter((arr) => arr.type === "bun"),
@@ -31,21 +35,35 @@ function BurgerIngredients() {
   );
 
   const handleScroll = () => {
-    const container = containerRef.current.scrollTop;
-    const sauces = saucesRef.current.offsetTop;
-    const mains = mainsRef.current.offsetTop;
+    const container = containerRef.current;
+    const sauces = saucesRef.current;
+    const mains = mainsRef.current;
 
-    if (container < sauces - 100) {
+    if (!container || !sauces || !mains) {
+      return;
+    }
+
+    const containerTop = container.scrollTop;
+    const saucesTop = sauces.offsetTop;
+    const mainsTop = mains.offsetTop;
+
+    if (containerTop < saucesTop - 100) {
       setCurrent("bun");
-    } else if (container < mains - 100) {
+    } else if (containerTop < mainsTop - 100) {
       setCurrent("sauces");
     } else {
       setCurrent("mains");
     }
   };
 
-  const clickOnCurrentTab = (ref) => {
+  const clickOnCurrentTab = (ref: React.RefObject<HTMLElement>) => {
     const container = containerRef.current;
+    const target = ref.current;
+
+    if (!container || !target) {
+      return;
+    }
+
     container.scrollTo({ top: ref.current.offsetTop, behavior: "smooth" });
   };
 
@@ -164,9 +182,5 @@ function BurgerIngredients() {
     </div>
   );
 }
-
-BurgerIngredients.propTypes = {
-  openModal: PropTypes.func
-};
 
 export default BurgerIngredients;
