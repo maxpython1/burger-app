@@ -1,13 +1,21 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import {
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+  useParams
+} from "react-router-dom";
+import { useAppDispatch } from "../../hooks/redux";
+import Feed from "../../pages/Feed/Feed";
+import FeedOrder from "../../pages/FeedOrder/FeedOrder";
 import ForgotPassword from "../../pages/ForgotPassword/ForgotPassword";
 import Login from "../../pages/Login/Login";
 import Profile from "../../pages/Profile/Profile";
 import Registration from "../../pages/Registration/Registration";
 import ResetPassword from "../../pages/ResetPassword/ResetPassword";
-import { getUser } from "../../services/actions/auth";
-import { fetchIngredients } from "../../services/actions/ingredients";
+import { getUserThunk } from "../../services/slices/authSlice";
+import { fetchIngredientsThunk } from "../../services/slices/ingredientsSlice";
 import { getCookie } from "../../utils/cookies";
 import AppHeader from "../AppHeader/AppHeader";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
@@ -18,8 +26,19 @@ import OrderDetails from "../OrderDetails/OrderDetails";
 import styles from "./App.module.css";
 import { ProtectedRouteElement } from "./ProtectedRouteElement/ProtectedRouteElement";
 
+function FeedOrderModal() {
+  const { number } = useParams();
+  const navigate = useNavigate();
+
+  return (
+    <Modal onCloseModal={() => navigate(-1)} title={`#${number}`}>
+      <FeedOrder />
+    </Modal>
+  );
+}
+
 function App() {
-  const dispatch = useDispatch<any>();
+  const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   const background = location.state?.background;
@@ -27,12 +46,12 @@ function App() {
   useEffect(() => {
     const token = getCookie("token");
     if (token) {
-      dispatch(getUser());
+      dispatch(getUserThunk());
     }
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(fetchIngredients());
+    dispatch(fetchIngredientsThunk());
   }, [dispatch]);
 
   const [isModalOrderOpen, setIsModalOrderOpen] = React.useState(false);
@@ -104,6 +123,8 @@ function App() {
             }
           />
           <Route path={"/ingredients/:id"} element={<IngredientDetails />} />
+          <Route path={"/feed"} element={<Feed />} />
+          <Route path={"/feed/:number"} element={<FeedOrder />} />
         </Routes>
         {background && (
           <Routes>
@@ -118,6 +139,7 @@ function App() {
                 </Modal>
               }
             />
+            <Route path="/feed/:number" element={<FeedOrderModal />} />
           </Routes>
         )}
         {isModalOrderOpen && (

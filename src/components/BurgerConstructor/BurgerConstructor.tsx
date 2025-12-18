@@ -6,16 +6,16 @@ import {
 import PropTypes from "prop-types";
 import React from "react";
 import { useDrop } from "react-dnd";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import {
-  addItem,
-  moveItem,
-  removeItem,
+  addIngredient,
+  moveIngredient,
+  removeIngredient,
   setBun
-} from "../../services/actions/burgerConstructor";
-import { createOrder } from "../../services/actions/order";
-import { TConstructorIngredient, TIngredient } from "../../utils/types";
+} from "../../services/slices/burgerConstructorSlice";
+import { createOrderThunk } from "../../services/slices/orderSlice";
+import { TIngredient } from "../../utils/types";
 import styles from "./BurgerConstructor.module.css";
 import DraggableIngredient from "./DraggableIngredient";
 
@@ -24,19 +24,18 @@ type BurgerConstructorProps = {
 };
 
 function BurgerConstructor({ openModal }: BurgerConstructorProps) {
-  const dispatch = useDispatch<any>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const user = useSelector((state: any) => state.auth.user);
-  const bun = useSelector((store: any) => store.burgerConstructor.bun);
-  const ingredients = useSelector(
-    (store: any) => store.burgerConstructor.ingredients
-  ) as TConstructorIngredient[];
+  const user = useAppSelector((state) => state.auth.user);
+  const { bun, ingredients } = useAppSelector(
+    (store) => store.burgerConstructor
+  );
 
   const [{ isHover }, dropBunRef] = useDrop(
     {
       accept: "bun",
-      drop(item) {
+      drop(item: TIngredient) {
         dispatch(setBun(item));
       },
       collect: (monitor) => ({ isHover: monitor.isOver() })
@@ -47,15 +46,15 @@ function BurgerConstructor({ openModal }: BurgerConstructorProps) {
   const [, dropIngredientRef] = useDrop(
     {
       accept: "ingredient",
-      drop(item) {
-        dispatch(addItem(item));
+      drop(item: TIngredient) {
+        dispatch(addIngredient(item));
       }
     },
     []
   );
 
-  const moveIngredient = (from: number, to: number) => {
-    dispatch(moveItem(from, to));
+  const handleMoveIngredient = (from: number, to: number) => {
+    dispatch(moveIngredient({ fromIndex: from, toIndex: to }));
   };
 
   const orderPrice = () => {
@@ -92,8 +91,8 @@ function BurgerConstructor({ openModal }: BurgerConstructorProps) {
             key={elem.uuid}
             elem={elem}
             index={id}
-            move={moveIngredient}
-            onRemove={(uuid: string) => dispatch(removeItem(uuid))}
+            move={handleMoveIngredient}
+            onRemove={(uuid: string) => dispatch(removeIngredient(uuid))}
           />
         ))}
       </ul>
@@ -121,10 +120,10 @@ function BurgerConstructor({ openModal }: BurgerConstructorProps) {
             if (!user) {
               return navigate("/login");
             }
-            if (!bun) {
+            if (!bun || !orderIds) {
               return;
             }
-            dispatch(createOrder(orderIds));
+            dispatch(createOrderThunk(orderIds));
             openModal();
           }}
         >

@@ -1,0 +1,47 @@
+.page {
+  margin-top: 40px;
+}
+
+.wrapper {
+  display: flex;
+  gap: 60px;
+  margin-top: 20px;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+}
+
+.orders {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: calc(100vh - 188px);
+  overflow: auto;
+  padding-right: 15px;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.infoWrapper {
+  display: flex;
+  gap: 160px;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  height: 210px;
+}
+
+.numbers {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 24px;
+}

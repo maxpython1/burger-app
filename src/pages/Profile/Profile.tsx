@@ -4,10 +4,10 @@ import {
   Input as UIInput
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { useForm } from "../../hooks/useForm";
-import { logout, updateUser } from "../../services/actions/auth";
+import { logoutThunk, updateUserThunk } from "../../services/slices/authSlice";
 import styles from "./Profile.module.css";
 
 type TUpdateUserProfile = {
@@ -19,8 +19,8 @@ type TUpdateUserProfile = {
 const Input = UIInput as any;
 
 function Profile() {
-  const dispatch = useDispatch<any>();
-  const user = useSelector((state: any) => state.auth.user);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
 
   const { values, handleChange, setValues } = useForm({
     name: "",
@@ -68,7 +68,7 @@ function Profile() {
           <NavLink
             to={"/"}
             onClick={() => {
-              dispatch(logout());
+              dispatch(logoutThunk());
             }}
             className="text text_type_main-large text_color_inactive"
           >
@@ -100,9 +100,7 @@ function Profile() {
               data.password = values.password;
             }
 
-            console.log(data);
-
-            dispatch(updateUser(data));
+            dispatch(updateUserThunk(data));
             setShowFormButton(false);
           }}
         >
