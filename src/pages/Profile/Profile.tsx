@@ -61,7 +61,11 @@ function Profile() {
           </NavLink>
           <NavLink
             to={"/profile/orders"}
-            className="text text_type_main-large text_color_inactive"
+            className={({ isActive }) =>
+              isActive
+                ? "text text_type_main-large"
+                : "text text_type_main-large text_color_inactive"
+            }
           >
             История заказов
           </NavLink>

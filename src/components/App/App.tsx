@@ -12,6 +12,7 @@ import FeedOrder from "../../pages/FeedOrder/FeedOrder";
 import ForgotPassword from "../../pages/ForgotPassword/ForgotPassword";
 import Login from "../../pages/Login/Login";
 import Profile from "../../pages/Profile/Profile";
+import ProfileOrders from "../../pages/ProfileOrders/ProfileOrders";
 import Registration from "../../pages/Registration/Registration";
 import ResetPassword from "../../pages/ResetPassword/ResetPassword";
 import { getUserThunk } from "../../services/slices/authSlice";
@@ -91,6 +92,22 @@ function App() {
             }
           />
           <Route
+            path={"/profile/orders"}
+            element={
+              <ProtectedRouteElement forAuthorized={true}>
+                <ProfileOrders />
+              </ProtectedRouteElement>
+            }
+          />
+          <Route
+            path={"/profile/orders/:number"}
+            element={
+              <ProtectedRouteElement forAuthorized={true}>
+                <FeedOrder />
+              </ProtectedRouteElement>
+            }
+          />
+          <Route
             path={"/login"}
             element={
               <ProtectedRouteElement forAuthorized={false}>
@@ -138,6 +155,10 @@ function App() {
                   <IngredientDetails />
                 </Modal>
               }
+            />
+            <Route
+              path="/profile/orders/:number"
+              element={<FeedOrderModal />}
             />
             <Route path="/feed/:number" element={<FeedOrderModal />} />
           </Routes>

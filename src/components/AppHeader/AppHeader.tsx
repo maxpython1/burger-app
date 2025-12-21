@@ -31,9 +31,7 @@ function AppHeader() {
           }
         >
           <ListIcon type={"secondary"} />
-          <p className="text text_type_main-default text_color_inactive">
-            Лента заказов
-          </p>
+          <p>Лента заказов</p>
         </NavLink>
       </nav>
       <NavLink to={"/"}>
