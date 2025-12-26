@@ -25,7 +25,7 @@ function FeedOrder() {
   const feedOrder = orders.find((el) => el.number === orderNumber);
 
   useEffect(() => {
-    if (!feedOrder && !order) {
+    if (!feedOrder && order?.number !== orderNumber) {
       dispatch(getOrderDetailsThunk(orderNumber));
     }
   }, [orderNumber, feedOrder, order, dispatch]);

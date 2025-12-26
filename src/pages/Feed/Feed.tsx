@@ -17,12 +17,12 @@ function Feed() {
 
   const doneNumbers = orders
     .filter((el) => el.status === "done")
-    .slice(0, 5)
+    .slice(0, 10)
     .map((el) => el.number);
 
   const pendingNumbers = orders
     .filter((el) => el.status === "pending")
-    .slice(0, 5)
+    .slice(0, 10)
     .map((el) => el.number);
 
   useEffect(() => {

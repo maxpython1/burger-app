@@ -14,7 +14,7 @@ import {
   removeIngredient,
   setBun
 } from "../../services/slices/burgerConstructorSlice";
-import { createOrderThunk } from "../../services/slices/orderSlice";
+import { clearOrder, createOrderThunk } from "../../services/slices/orderSlice";
 import { TIngredient } from "../../utils/types";
 import styles from "./BurgerConstructor.module.css";
 import DraggableIngredient from "./DraggableIngredient";
@@ -123,6 +123,7 @@ function BurgerConstructor({ openModal }: BurgerConstructorProps) {
             if (!bun || !orderIds) {
               return;
             }
+            dispatch(clearOrder());
             dispatch(createOrderThunk(orderIds));
             openModal();
           }}

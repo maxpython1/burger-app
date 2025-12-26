@@ -25,7 +25,7 @@
 .right {
   display: flex;
   flex-direction: column;
-  gap: 60px;
+  margin-top: -55px;
 }
 
 .infoWrapper {
@@ -36,12 +36,20 @@
 .info {
   display: flex;
   flex-direction: column;
-  height: 210px;
+  align-items: center;
 }
 
 .numbers {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 24px;
+  gap: 3px;
+  margin-top: 14px;
+}
+
+.completedAll {
+  margin-top: 45px;
+}
+
+.completedToday {
+  margin-top: 30px;
 }

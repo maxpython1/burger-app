@@ -17,6 +17,10 @@ function ProfileOrders() {
 
   const orders = useAppSelector((store) => store.profileFeed.orders);
 
+  const sortedOrders = [...orders].sort((a, b) => {
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
+
   const ingredients = useAppSelector((store) => store.ingredients.ingredients);
 
   const ingredientMap = new Map(ingredients.map((el) => [el._id, el]));
@@ -83,7 +87,7 @@ function ProfileOrders() {
           </p>
         </nav>
         <div className={styles.orders}>
-          {orders.map((el, id) => {
+          {sortedOrders.map((el, id) => {
             const orderIngredients = el.ingredients
               .map((el) => ingredientMap.get(el))
               .filter((el): el is TIngredient => Boolean(el));
@@ -104,6 +108,7 @@ function ProfileOrders() {
                   number={el.number}
                   name={el.name}
                   createdAt={el.createdAt}
+                  status={el.status}
                   images={images}
                   price={price}
                 />

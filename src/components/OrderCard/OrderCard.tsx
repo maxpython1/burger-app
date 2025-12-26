@@ -8,6 +8,7 @@ type TOrderCardProps = {
   number: number;
   name: string;
   createdAt: string;
+  status?: string;
   images: string[];
   price: number;
 };
@@ -16,12 +17,24 @@ function OrderCard({
   number,
   name,
   createdAt,
+  status,
   images,
   price
 }: TOrderCardProps) {
   const visibleImagesIngredients = images.slice(0, 6);
   const otherImagesIngredients =
     images.length - visibleImagesIngredients.length;
+
+  const showStatus = () => {
+    switch (status) {
+      case "done":
+        return "Выполнен";
+      case "created":
+        return "Создан";
+      case "pending":
+        return "Готовится";
+    }
+  };
 
   return (
     <article className={styles.cardWrapper}>
@@ -32,6 +45,7 @@ function OrderCard({
         </p>
       </div>
       <p className="text text_type_main-medium">{name}</p>
+      <p className="text text_type_main-default">{showStatus()}</p>
       <div className={styles.ingredients}>
         <div className={styles.imgWrapper}>
           {visibleImagesIngredients.map((el, idx) => {
