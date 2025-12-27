@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { isValidOrder } from "../../utils/isValidOrders";
 import { TOrder, TOrderMessage } from "../../utils/types";
 
 type TProfileOrder = {
@@ -35,7 +36,7 @@ const profileFeedSlice = createSlice({
       state.error = action.payload;
     },
     wsMessage(state, action: PayloadAction<TOrderMessage>) {
-      state.orders = action.payload.orders;
+      state.orders = action.payload.orders.filter(isValidOrder);
     }
   }
 });

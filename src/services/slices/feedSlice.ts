@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { isValidOrder } from "../../utils/isValidOrders";
 import { TOrder, TOrderMessage } from "../../utils/types";
 
 type TFeedState = {
@@ -39,7 +40,7 @@ const feedSlice = createSlice({
       state.error = action.payload;
     },
     wsMessage(state, action: PayloadAction<TOrderMessage>) {
-      state.orders = action.payload.orders;
+      state.orders = action.payload.orders.filter(isValidOrder);
       state.total = action.payload.total;
       state.totalToday = action.payload.totalToday;
     }

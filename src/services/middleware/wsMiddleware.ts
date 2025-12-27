@@ -1,50 +1,43 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import { Middleware } from "redux";
+import type {
+  ActionCreatorWithPayload,
+  ActionCreatorWithoutPayload
+} from "@reduxjs/toolkit";
+import type { Middleware } from "redux";
 
-export const createMiddleware = (wsActions: any): Middleware => {
+type TWsActions<TMessage> = {
+  wsConnect: ActionCreatorWithPayload<string>;
+  wsDisconnect: ActionCreatorWithoutPayload;
+  wsOpen: ActionCreatorWithoutPayload;
+  wsClose: ActionCreatorWithoutPayload;
+  wsError: ActionCreatorWithPayload<string>;
+  wsMessage: ActionCreatorWithPayload<TMessage>;
+};
+
+export const createMiddleware = <TMessage>(
+  wsActions: TWsActions<TMessage>
+): Middleware => {
   let socket: WebSocket | null = null;
-
-  const isValidOrder = (order: any): boolean => {
-    return (
-      order &&
-      typeof order._id === "string" &&
-      typeof order.number === "number" &&
-      Array.isArray(order.ingredients) &&
-      order.ingredients.length > 0 &&
-      typeof order.status === "string" &&
-      typeof order.createdAt === "string"
-    );
-  };
 
   return (store) => (next) => (action) => {
     const { wsConnect, wsDisconnect, wsOpen, wsClose, wsError, wsMessage } =
       wsActions;
 
     if (wsConnect.match(action)) {
-      socket = new WebSocket((action as PayloadAction<string>).payload);
+      socket = new WebSocket(action.payload);
 
-      socket.onopen = () => {
-        store.dispatch(wsOpen());
-      };
-      socket.onclose = () => {
-        store.dispatch(wsClose());
-      };
-      socket.onerror = () => {
-        store.dispatch(wsError());
-      };
-      socket.onmessage = (e) => {
+      socket.onopen = () => store.dispatch(wsOpen());
+      socket.onclose = () => store.dispatch(wsClose());
+
+      socket.onerror = () => store.dispatch(wsError("WebSocket error"));
+
+      socket.onmessage = (event) => {
         try {
-          const data = JSON.parse(e.data);
-          if (data.success && Array.isArray(data.orders)) {
-            const validOrders = data.orders.filter(isValidOrder);
-            store.dispatch(
-              wsMessage({
-                ...data,
-                orders: validOrders
-              })
-            );
+          const data = JSON.parse(event.data);
+
+          if (data?.success) {
+            store.dispatch(wsMessage(data as TMessage));
           } else {
-            store.dispatch(wsError(data.message || "WebSocket error"));
+            store.dispatch(wsError(data?.message || "WebSocket error"));
             socket?.close();
           }
         } catch {

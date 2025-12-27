@@ -158,7 +158,11 @@ function App() {
             />
             <Route
               path="/profile/orders/:number"
-              element={<FeedOrderModal />}
+              element={
+                <ProtectedRouteElement forAuthorized={true}>
+                  <FeedOrderModal />
+                </ProtectedRouteElement>
+              }
             />
             <Route path="/feed/:number" element={<FeedOrderModal />} />
           </Routes>

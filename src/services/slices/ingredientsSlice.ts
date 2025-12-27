@@ -18,13 +18,9 @@ export const fetchIngredientsThunk = createAsyncThunk<
   TIngredient[],
   void,
   { rejectValue: string }
->("ingredients/fetch", async (_, thunkAPI) => {
-  try {
-    const data = await request("ingredients");
-    return data.data;
-  } catch (e) {
-    return thunkAPI.rejectWithValue(String(e));
-  }
+>("ingredients/fetch", async () => {
+  const data = await request("ingredients");
+  return data.data;
 });
 
 const ingredientsSlice = createSlice({

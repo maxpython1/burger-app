@@ -43,19 +43,15 @@ export const loginThunk = createAsyncThunk<
   },
   TLoginArgs,
   { rejectValue: string }
->("auth/login", async ({ email, password }, thunkAPI) => {
-  try {
-    const { user, accessToken, refreshToken } = await request("auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
-    });
-    document.cookie = `token=${encodeURIComponent(accessToken)}; path=/`;
-    localStorage.setItem("refreshToken", refreshToken);
-    return { user, accessToken, refreshToken };
-  } catch (e) {
-    return thunkAPI.rejectWithValue(String(e));
-  }
+>("auth/login", async ({ email, password }) => {
+  const { user, accessToken, refreshToken } = await request("auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
+  document.cookie = `token=${encodeURIComponent(accessToken)}; path=/`;
+  localStorage.setItem("refreshToken", refreshToken);
+  return { user, accessToken, refreshToken };
 });
 
 export const registerThunk = createAsyncThunk<
@@ -66,19 +62,15 @@ export const registerThunk = createAsyncThunk<
   },
   TRegisterArgs,
   { rejectValue: string }
->("auth/register", async ({ name, email, password }, thunkAPI) => {
-  try {
-    const { user, accessToken, refreshToken } = await request("auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password })
-    });
-    document.cookie = `token=${encodeURIComponent(accessToken)}; path=/`;
-    localStorage.setItem("refreshToken", refreshToken);
-    return { user, accessToken, refreshToken };
-  } catch (e) {
-    return thunkAPI.rejectWithValue(String(e));
-  }
+>("auth/register", async ({ name, email, password }) => {
+  const { user, accessToken, refreshToken } = await request("auth/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email, password })
+  });
+  document.cookie = `token=${encodeURIComponent(accessToken)}; path=/`;
+  localStorage.setItem("refreshToken", refreshToken);
+  return { user, accessToken, refreshToken };
 });
 
 export const refreshTokenThunk = createAsyncThunk<
@@ -90,18 +82,14 @@ export const refreshTokenThunk = createAsyncThunk<
   if (!token) {
     return thunkAPI.rejectWithValue("No refresh token!");
   }
-  try {
-    const { accessToken, refreshToken } = await request("auth/token", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token })
-    });
-    document.cookie = `token=${encodeURIComponent(accessToken)}; path=/`;
-    localStorage.setItem("refreshToken", refreshToken);
-    return { accessToken, refreshToken };
-  } catch (e) {
-    return thunkAPI.rejectWithValue(String(e));
-  }
+  const { accessToken, refreshToken } = await request("auth/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token })
+  });
+  document.cookie = `token=${encodeURIComponent(accessToken)}; path=/`;
+  localStorage.setItem("refreshToken", refreshToken);
+  return { accessToken, refreshToken };
 });
 
 export const getUserThunk = createAsyncThunk<
@@ -129,13 +117,9 @@ export const getUserThunk = createAsyncThunk<
     if (e?.status !== 401 && e?.status !== 403) {
       return thunkAPI.rejectWithValue(String(e));
     }
-    try {
-      await thunkAPI.dispatch(refreshTokenThunk());
-      const { user } = await doRequest();
-      return user;
-    } catch (e2) {
-      return thunkAPI.rejectWithValue(String(e2));
-    }
+    await thunkAPI.dispatch(refreshTokenThunk());
+    const { user } = await doRequest();
+    return user;
   }
 });
 
@@ -143,19 +127,15 @@ export const logoutThunk = createAsyncThunk<
   void,
   void,
   { rejectValue: string }
->("auth/logout", async (_, thunkAPI) => {
+>("auth/logout", async () => {
   const token = localStorage.getItem("refreshToken");
-  try {
-    await request("auth/logout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token })
-    });
-    document.cookie = "token=; path=/; max-age=0; SameSite=Lax";
-    localStorage.removeItem("refreshToken");
-  } catch (e) {
-    return thunkAPI.rejectWithValue(String(e));
-  }
+  await request("auth/logout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token })
+  });
+  document.cookie = "token=; path=/; max-age=0; SameSite=Lax";
+  localStorage.removeItem("refreshToken");
 });
 
 export const updateUserThunk = createAsyncThunk<
@@ -185,13 +165,9 @@ export const updateUserThunk = createAsyncThunk<
     if (e?.status !== 401 && e?.status !== 403) {
       return thunkAPI.rejectWithValue(String(e));
     }
-    try {
-      await thunkAPI.dispatch(refreshTokenThunk());
-      const res2 = await doRequest();
-      return res2.user;
-    } catch (e2) {
-      return thunkAPI.rejectWithValue(String(e2));
-    }
+    await thunkAPI.dispatch(refreshTokenThunk());
+    const res2 = await doRequest();
+    return res2.user;
   }
 });
 
