@@ -1,10 +1,11 @@
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../hooks/redux";
 import icon from "../../images/done.svg";
+import { RootState } from "../../services/rootReducer";
 import styles from "./OrderDetails.module.css";
 
 function OrderDetails() {
-  const { orderNumber, isLoading, error } = useSelector(
-    (state: any) => state.order
+  const { orderNumber, isLoading, error } = useAppSelector(
+    (state: RootState) => state.order
   );
 
   return (
@@ -12,12 +13,14 @@ function OrderDetails() {
       <p className="text text_type_digits-large">
         {isLoading ? "Ожидайте..." : error ? "Ошибка" : orderNumber}
       </p>
-      {orderNumber && (
+      {orderNumber !== null && (
         <p className={`text text_type_main-medium ${styles.orderCaption}`}>
           идентификатор заказа
         </p>
       )}
-      {orderNumber && <img src={icon} alt={"Иконка подтверждения заказа"} />}
+      {orderNumber !== null && (
+        <img src={icon} alt={"Иконка подтверждения заказа"} />
+      )}
       <p className={`text text_type_main-default ${styles.orderResult}`}>
         {error
           ? "Не удалось оформить заказ"

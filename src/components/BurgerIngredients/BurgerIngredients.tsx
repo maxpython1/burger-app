@@ -1,17 +1,14 @@
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import React from "react";
-import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { TIngredient } from "../../utils/types";
+import { useAppSelector } from "../../hooks/redux";
 import CardIngredient from "../CardIngredient/CardIngredient";
 import styles from "./BurgerIngredients.module.css";
 
 function BurgerIngredients() {
   const [current, setCurrent] = React.useState("bun");
 
-  const ingredients = useSelector(
-    (store: any) => store.ingredients.ingredients
-  ) as TIngredient[];
+  const ingredients = useAppSelector((store) => store.ingredients.ingredients);
 
   const navigate = useNavigate();
   const location = useLocation();

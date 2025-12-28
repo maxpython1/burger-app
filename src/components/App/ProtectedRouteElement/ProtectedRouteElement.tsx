@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
-import { useSelector } from "react-redux";
 import { Navigate, useLocation } from "react-router-dom";
+import { useAppSelector } from "../../../hooks/redux";
 
 type ProtectedRouteElementProps = {
   children: ReactElement;
@@ -12,7 +12,7 @@ export function ProtectedRouteElement({
   forAuthorized
 }: ProtectedRouteElementProps) {
   const location = useLocation();
-  const { user, isLoading } = useSelector((state: any) => state.auth);
+  const { user, isLoading } = useAppSelector((state) => state.auth);
 
   if (isLoading) {
     return null;

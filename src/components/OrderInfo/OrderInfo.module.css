@@ -1,0 +1,66 @@
+.wrapper {
+  max-height: 85vh;
+}
+
+.orderName {
+  margin-top: 40px;
+}
+
+.statusOrder {
+  margin-top: 12px;
+}
+
+.compositionOrderTitle {
+  margin-top: 60px;
+}
+
+.compositionOrderWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+  overflow: auto;
+  padding-right: 24px;
+  max-height: 37vh;
+}
+
+.ingredientsWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.ingredient {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ingredient img {
+  width: 64px;
+  height: 64px;
+  border: 1px solid #4c4cff;
+  background-color: #1c1c21;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.priceWrapper {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.resultWrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+
+.totalPriceWrapper {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}

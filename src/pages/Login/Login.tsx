@@ -3,16 +3,16 @@ import {
   PasswordInput,
   Input as UIInput
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { useAppDispatch } from "../../hooks/redux";
 import { useForm } from "../../hooks/useForm";
-import { login } from "../../services/actions/auth";
+import { loginThunk } from "../../services/slices/authSlice";
 import styles from "./Login.module.css";
 
 const Input = UIInput as any;
 
 function Login() {
-  const dispatch = useDispatch<any>();
+  const dispatch = useAppDispatch();
 
   const { values, handleChange } = useForm({
     email: "",
@@ -25,7 +25,9 @@ function Login() {
         className={styles.loginWrapper}
         onSubmit={(e) => {
           e.preventDefault();
-          dispatch(login(values.email, values.password));
+          dispatch(
+            loginThunk({ email: values.email, password: values.password })
+          );
         }}
       >
         <p className="text text_type_main-medium">Вход</p>

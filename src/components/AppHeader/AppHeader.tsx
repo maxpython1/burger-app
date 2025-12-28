@@ -22,12 +22,17 @@ function AppHeader() {
           <BurgerIcon type={"primary"} />
           <p>Конструктор</p>
         </NavLink>
-        <a className={styles.navItem} href={"#"}>
+        <NavLink
+          to={"/feed"}
+          className={({ isActive }) =>
+            isActive
+              ? `text text_type_main-default ${styles.navItem}`
+              : `text text_type_main-default text_color_inactive ${styles.navItem}`
+          }
+        >
           <ListIcon type={"secondary"} />
-          <p className="text text_type_main-default text_color_inactive">
-            Лента заказов
-          </p>
-        </a>
+          <p>Лента заказов</p>
+        </NavLink>
       </nav>
       <NavLink to={"/"}>
         <Logo />

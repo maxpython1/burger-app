@@ -16,3 +16,27 @@ export type TIngredient = {
 export type TConstructorIngredient = TIngredient & {
   uuid: string;
 };
+
+export type TUser = {
+  name: string;
+  email: string;
+};
+
+export type TOrderStatus = "created" | "pending" | "done";
+
+export type TOrder = {
+  _id: string;
+  name: string;
+  ingredients: string[];
+  status: string;
+  number: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type TOrderMessage = {
+  success: boolean;
+  orders: TOrder[];
+  total: number;
+  totalToday: number;
+};

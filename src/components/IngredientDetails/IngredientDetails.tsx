@@ -1,17 +1,12 @@
-import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { TConstructorIngredient } from "../../utils/types";
+import { useAppSelector } from "../../hooks/redux";
 import styles from "./IngredientDetails.module.css";
 
 function IngredientDetails() {
   const { id } = useParams();
-  const ingredients = useSelector(
-    (state: any) => state.ingredients.ingredients
-  );
+  const ingredients = useAppSelector((state) => state.ingredients.ingredients);
 
-  const ingredient = ingredients.find(
-    (elem: TConstructorIngredient) => elem._id === id
-  );
+  const ingredient = ingredients.find((el) => el._id === id);
 
   if (!ingredient) {
     return null;
