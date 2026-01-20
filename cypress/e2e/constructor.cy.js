@@ -2,10 +2,24 @@
 
 const API = "https://norma.education-services.ru/api";
 
+const SELECTORS = {
+  ingredientsWrapper: '[class^="BurgerIngredients_wrapper"]',
+  constructorWrapper: '[class^="BurgerConstructor_wrapper"]',
+  constructorIngredients: 'ul[class^="BurgerConstructor_ingredients"]',
+  modalsRoot: "#react-modals",
+  modalClose: '[class*="close"]'
+};
+
+const TEST_DATA = {
+  bun: "Булка тестовая",
+  main: "Начинка тестовая",
+  orderNumber: "12345"
+};
+
 function dragIngredientToConstructor(ingredientName, dropSelector) {
   const dataTransfer = new DataTransfer();
 
-  cy.get('[class^="BurgerIngredients_wrapper"]')
+  cy.get(SELECTORS.ingredientsWrapper)
     .contains(ingredientName)
     .closest("article")
     .trigger("dragstart", { dataTransfer, force: true });
@@ -30,7 +44,7 @@ describe("Страница Конструктор", () => {
     cy.visit("/", {
       onBeforeLoad(win) {
         win.localStorage.setItem("refreshToken", "test-refresh-token");
-        win.document.cookie = "token=Bearer test-access-token";
+        win.document.cookie = `token=${encodeURIComponent("Bearer test-access-token")}; path=/`;
       }
     });
 
@@ -42,46 +56,41 @@ describe("Страница Конструктор", () => {
     cy.contains("Булка тестовая").click();
 
     cy.contains("Детали ингредиента").should("exist");
-    cy.get("#react-modals").contains("Булка тестовая").should("exist");
+    cy.get(SELECTORS.modalsRoot).contains("Булка тестовая").should("exist");
 
-    cy.get("#react-modals").contains("Калории, ккал").should("exist");
-    cy.get("#react-modals").contains("200").should("exist");
+    cy.get(SELECTORS.modalsRoot).contains("Калории, ккал").should("exist");
+    cy.get(SELECTORS.modalsRoot).contains("200").should("exist");
 
-    cy.get('#react-modals [class*="close"]').click();
-    cy.get("#react-modals").should("be.empty");
+    cy.get(`${SELECTORS.modalsRoot} ${SELECTORS.modalClose}`).click();
+    cy.get(SELECTORS.modalsRoot).should("be.empty");
   });
 
   it("перетаскивает ингредиенты, создаёт заказ, открывает/закрывает модалку заказа", () => {
-    dragIngredientToConstructor(
-      "Булка тестовая",
-      '[class^="BurgerConstructor_wrapper"]'
-    );
+    dragIngredientToConstructor("Булка тестовая", SELECTORS.constructorWrapper);
 
-    cy.get('[class^="BurgerConstructor_wrapper"]').contains(
-      "Булка тестовая (верх)"
-    );
-    cy.get('[class^="BurgerConstructor_wrapper"]').contains(
-      "Булка тестовая (низ)"
-    );
+    cy.get(SELECTORS.constructorWrapper).contains("Булка тестовая (верх)");
+    cy.get(SELECTORS.constructorWrapper).contains("Булка тестовая (низ)");
 
     dragIngredientToConstructor(
       "Начинка тестовая",
-      'ul[class^="BurgerConstructor_ingredients"]'
+      SELECTORS.constructorIngredients
     );
 
-    cy.get('[class^="BurgerConstructor_wrapper"]').contains("Начинка тестовая");
+    cy.get(SELECTORS.constructorWrapper).contains("Начинка тестовая");
 
     cy.contains("Оформить заказ").click();
 
     cy.wait("@createOrder");
 
-    cy.get("#react-modals").contains("12345").should("exist");
-    cy.get("#react-modals").contains("идентификатор заказа").should("exist");
+    cy.get(SELECTORS.modalsRoot).contains("12345").should("exist");
+    cy.get(SELECTORS.modalsRoot)
+      .contains("идентификатор заказа")
+      .should("exist");
 
-    cy.get('#react-modals [class*="close"]').click();
-    cy.get("#react-modals").should("be.empty");
+    cy.get(`${SELECTORS.modalsRoot} ${SELECTORS.modalClose}`).click();
+    cy.get(SELECTORS.modalsRoot).should("be.empty");
 
-    cy.get('[class^="BurgerConstructor_wrapper"]').should(
+    cy.get(SELECTORS.constructorWrapper).should(
       "not.contain",
       "Булка тестовая (верх)"
     );
